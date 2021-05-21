@@ -1,0 +1,25 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    name: Run tests - Node ${{ matrix.node-version }} on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [10, 12, 14]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        name: Setup node ${{ matrix.node-version }}
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: install grunt-cli
+        run: npm install -g grunt-cli
+      - name: install package
+        run: npm install
+      - name: run tests
+        run: grunt test
